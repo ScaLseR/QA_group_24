@@ -1,1 +1,1 @@
-# git_group_24
+# Vadim Ksenzov's QA courses group 24
