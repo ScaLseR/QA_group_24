@@ -1,0 +1,803 @@
+{
+	"info": {
+		"_postman_id": "92941a5e-6497-49ad-a068-0a4af7c8ad4f",
+		"name": "DZ3_postman_qa_ksendzov",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get_token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"token\", jsonData.token);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "qwerty",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{schema}}{{host}}:{{port}}/login",
+					"host": [
+						"{{schema}}{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Проверка статус кода 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// 2. Проверка структуры json в ответе.\r",
+							"var schema = {\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"person\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"u_age\": {\r",
+							"          \"type\": \"integer\"\r",
+							"        },\r",
+							"        \"u_name\": {\r",
+							"          \"type\": \"array\",\r",
+							"          \"items\": [\r",
+							"            {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            {\r",
+							"              \"type\": \"integer\"\r",
+							"            },\r",
+							"            {\r",
+							"              \"type\": \"integer\"\r",
+							"            }\r",
+							"          ]\r",
+							"        },\r",
+							"        \"u_salary_1_5_year\": {\r",
+							"          \"type\": \"integer\"\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"u_age\",\r",
+							"        \"u_name\",\r",
+							"        \"u_salary_1_5_year\"\r",
+							"      ]\r",
+							"    },\r",
+							"    \"qa_salary_after_12_months\": {\r",
+							"      \"type\": \"number\"\r",
+							"    },\r",
+							"    \"qa_salary_after_6_months\": {\r",
+							"      \"type\": \"integer\"\r",
+							"    },\r",
+							"    \"start_qa_salary\": {\r",
+							"      \"type\": \"integer\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"person\",\r",
+							"    \"qa_salary_after_12_months\",\r",
+							"    \"qa_salary_after_6_months\",\r",
+							"    \"start_qa_salary\"\r",
+							"  ]\r",
+							"};\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);    \r",
+							"});\r",
+							"\r",
+							"// 3. В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.\r",
+							"\r",
+							"// Проверка qa_salary_after_6_months: salary * 2\r",
+							"pm.test(\"qa_salary_after_6_months : salary * 2\", function () {\r",
+							"    pm.expect(jsonData.qa_salary_after_6_months).to.eql((pm.collectionVariables.get(\"salary\") * 2));\r",
+							"});\r",
+							"// Проверка qa_salary_after_12_months: salary * 2.9\r",
+							"pm.test(\"qa_salary_after_12_months: salary * 2.9\", function () {\r",
+							"    pm.expect(jsonData.qa_salary_after_12_months).to.eql((pm.collectionVariables.get(\"salary\") * 2.9));\r",
+							"});\r",
+							"// Проверка u_salary_1.5_year: salary * 4\r",
+							"pm.test(\"u_salary_1.5_year: salary * 4\", function () {\r",
+							"    pm.expect(jsonData.person.u_salary_1_5_year).to.eql((pm.collectionVariables.get(\"salary\") * 4));\r",
+							"});\r",
+							"\r",
+							"// Достать значение из поля 'u_salary_1.5_year' и передать в поле salary запроса http://162.55.220.72:5005/get_test_user\r",
+							"pm.collectionVariables.set(\"u_salary_1.5_year\", jsonData.person.u_salary_1_5_year);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"age\":{{age}},\r\n\"salary\":{{salary}},\r\n\"name\": \"{{name}}\",\r\n\"auth_token\": \"{{token}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{schema}}{{host}}:{{port}}/user_info",
+					"host": [
+						"{{schema}}{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new_data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Проверка структуры json в ответе.\r",
+							"var schema = {  \r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"age\": {\r",
+							"      \"type\": \"integer\"\r",
+							"    },\r",
+							"    \"name\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"salary\": {\r",
+							"      \"type\": \"array\",\r",
+							"      \"items\": [\r",
+							"        {\r",
+							"          \"type\": \"integer\"\r",
+							"        },\r",
+							"        {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        {\r",
+							"          \"type\": \"string\"\r",
+							"        }\r",
+							"      ]\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"age\",\r",
+							"    \"name\",\r",
+							"    \"salary\"\r",
+							"  ]\r",
+							"};\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);    \r",
+							"});\r",
+							"\r",
+							"// 3. В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.\r",
+							"// salary*2\r",
+							"pm.test(\"salary*2\", function () {\r",
+							"    pm.expect(+jsonData.salary[1]).to.eql((pm.collectionVariables.get(\"salary\") * 2));\r",
+							"});\r",
+							"// salary*3\r",
+							"pm.test(\"salary*2\", function () {\r",
+							"    pm.expect(+jsonData.salary[2]).to.eql((pm.collectionVariables.get(\"salary\") * 3));\r",
+							"});\r",
+							"\r",
+							"// 4. Проверить, что 2-й элемент массива salary больше 1-го и 0-го\r",
+							"pm.test(\"2 element > 1 and 0\", function () {   \r",
+							"   let rez = (((+jsonData.salary[2]) > (+jsonData.salary[1])) && ((+jsonData.salary[2]) > (jsonData.salary[0])));   \r",
+							"   pm.expect(rez).to.eql(true);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "{{age}}",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "{{salary}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{schema}}{{host}}:{{port}}/new_data",
+					"host": [
+						"{{schema}}{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"new_data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "test_pet_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//2. Проверка структуры json в ответе.\r",
+							"var schema = {  \r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"age\": {\r",
+							"      \"type\": \"integer\"\r",
+							"    },\r",
+							"    \"daily_food\": {\r",
+							"      \"type\": \"number\"\r",
+							"    },\r",
+							"    \"daily_sleep\": {\r",
+							"      \"type\": \"number\"\r",
+							"    },\r",
+							"    \"name\": {\r",
+							"      \"type\": \"string\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"age\",\r",
+							"    \"daily_food\",\r",
+							"    \"daily_sleep\",\r",
+							"    \"name\"\r",
+							"  ]\r",
+							"};\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);   \r",
+							"});\r",
+							"\r",
+							"//3. В ответе указаны коэффициенты умножения weight, напишите тесты по проверке правильности результата перемножения на коэффициент.\r",
+							"// weight * 0.012\r",
+							"pm.test(\"weight * 0.012\", function () {\r",
+							"    pm.expect(jsonData.daily_food).to.eql((pm.collectionVariables.get(\"weight\") * 0.012));\r",
+							"});\r",
+							"//weight * 2.5\r",
+							"pm.test(\"weight * 0.012\", function () {\r",
+							"    pm.expect(jsonData.daily_sleep).to.eql((pm.collectionVariables.get(\"weight\") * 2.5));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "{{age}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "weight",
+							"value": "{{weight}}",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{schema}}{{host}}:{{port}}/test_pet_info",
+					"host": [
+						"{{schema}}{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"test_pet_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_test_user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// 2. Проверка структуры json в ответе.\r",
+							"var schema = {  \r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"age\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"family\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"children\": {\r",
+							"          \"type\": \"array\",\r",
+							"          \"items\": [\r",
+							"            {\r",
+							"              \"type\": \"array\",\r",
+							"              \"items\": [\r",
+							"                {\r",
+							"                  \"type\": \"string\"\r",
+							"                },\r",
+							"                {\r",
+							"                  \"type\": \"integer\"\r",
+							"                }\r",
+							"              ]\r",
+							"            },\r",
+							"            {\r",
+							"              \"type\": \"array\",\r",
+							"              \"items\": [\r",
+							"                {\r",
+							"                  \"type\": \"string\"\r",
+							"                },\r",
+							"                {\r",
+							"                  \"type\": \"integer\"\r",
+							"                }\r",
+							"              ]\r",
+							"            }\r",
+							"          ]\r",
+							"        },\r",
+							"        \"u_salary_1_5_year\": {\r",
+							"          \"type\": \"integer\"\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"children\",\r",
+							"        \"u_salary_1_5_year\"\r",
+							"      ]\r",
+							"    },\r",
+							"    \"name\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"salary\": {\r",
+							"      \"type\": \"integer\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"age\",\r",
+							"    \"family\",\r",
+							"    \"name\",\r",
+							"    \"salary\"\r",
+							"  ]\r",
+							"};\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;    \r",
+							"});\r",
+							"\r",
+							"//3. Проверить что занчение поля name = значению переменной name из окружения\r",
+							"pm.test(\"env name\", function () {    \r",
+							"    pm.expect(jsonData.name).to.eql(pm.collectionVariables.get(\"name\"));\r",
+							"});\r",
+							"\r",
+							"// 4. Проверить что занчение поля age в ответе соответсвует отправленному в запросе значению поля age\r",
+							"pm.test(\"body age\", function () {   \r",
+							"    pm.expect(jsonData.age).to.eql(pm.request.body.formdata.get(\"age\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "{{age}}",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "{{salary}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{schema}}{{host}}:{{port}}/get_test_user",
+					"host": [
+						"{{schema}}{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"get_test_user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "currency",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"data\", pm.response.json());\r",
+							"pm.collectionVariables.set(\"curr\",pm.response.json()[_.random(0,pm.response.json().length)].Cur_ID);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{schema}}{{host}}:{{port}}/currency",
+					"host": [
+						"{{schema}}{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"currency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "curr_byn",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"});\r",
+							"\r",
+							"// Проверка структуры json в ответе.\r",
+							"var schema = {  \r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"Cur_Abbreviation\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"Cur_ID\": {\r",
+							"      \"type\": \"integer\"\r",
+							"    },\r",
+							"    \"Cur_Name\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"Cur_OfficialRate\": {\r",
+							"      \"type\": \"number\"\r",
+							"    },\r",
+							"    \"Cur_Scale\": {\r",
+							"      \"type\": \"integer\"\r",
+							"    },\r",
+							"    \"Date\": {\r",
+							"      \"type\": \"string\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"Cur_Abbreviation\",\r",
+							"    \"Cur_ID\",\r",
+							"    \"Cur_Name\",\r",
+							"    \"Cur_OfficialRate\",\r",
+							"    \"Cur_Scale\",\r",
+							"    \"Date\"\r",
+							"  ]\r",
+							"};\r",
+							"\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"//******\r",
+							"//1) получить список валют\r",
+							"//2) итерировать список валют\r",
+							"//3) в каждой итерации отправлять запрос на сервер для получения курса каждой валюты\r",
+							"//4) если возвращается 500 код, переходим к следующей итреации\r",
+							"//5) если получаем 200 код, проверяем response json на наличие поля \"Cur_OfficialRate\"\r",
+							"//6) если поле есть, пишем в консоль инфу про фалюту в виде response\r",
+							"//{\r",
+							"//    \"Cur_Abbreviation\": str\r",
+							"//    \"Cur_ID\": int,\r",
+							"//    \"Cur_Name\": str,\r",
+							"//   \"Cur_OfficialRate\": float,\r",
+							"//    \"Cur_Scale\": int,\r",
+							"//    \"Date\": str\r",
+							"//}\r",
+							"//7) переходим к следующей итерации\r",
+							"\r",
+							"var jsonData = pm.collectionVariables.get(\"data\")\r",
+							"var index, len;\r",
+							"len = jsonData.length;\r",
+							"for (index = 0, len; index < len; ++index) {\r",
+							"      \r",
+							"    const data  = {\r",
+							"        url : 'http://162.55.220.72:5005/curr_byn',\r",
+							"        method: 'POST',\r",
+							"        header: {\r",
+							"            'Content-Type' : 'multipart/form-data'\r",
+							"        },\r",
+							"        body: {\r",
+							"            mode: 'formdata',\r",
+							"            formdata: [\r",
+							"                {key: \"auth_token\", value: pm.collectionVariables.get(\"token\")},\r",
+							"                {key: \"curr_code\", value: jsonData[index].Cur_ID}\r",
+							"            ]\r",
+							"        }\r",
+							"    }\r",
+							"     \r",
+							"       pm.sendRequest(data, function(err,res) {\r",
+							"           if ((res.code == 200) && (res.json().Cur_OfficialRate !== null)){\r",
+							"               console.log(res.json());\r",
+							"           }                \r",
+							"                       \r",
+							"\r",
+							"        });\r",
+							"\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//var jsonData = pm.collectionVariables.get(\"data\")\r",
+							"//var index, len, data_int;\r",
+							"//len = jsonData.length;\r",
+							"//for (index = 0, len; index < len; ++index) {\r",
+							"  //  console.log(jsonData[index].Cur_ID);      \r",
+							"  //  pm.collectionVariables.set(\"curr\", jsonData[index].Cur_ID);\r",
+							"   // console.log('env='+pm.collectionVariables.get(\"curr\"));\r",
+							"  //  const data  = {\r",
+							"  //      url : 'http://162.55.220.72:5005/curr_byn',\r",
+							" //       method: 'POST',\r",
+							"  //      header: {\r",
+							"  //          'Content-Type' : 'multipart/form-data'\r",
+							"  //      },\r",
+							"  //      body: {\r",
+							"  //          mode: 'formdata',\r",
+							"  //          formdata: [\r",
+							"  //              {key: \"aut_token\", value: pm.collectionVariables.get(\"token\")},\r",
+							"  //              {key: \"curr_code\", value: pm.collectionVariables.get(\"curr\")}\r",
+							"   //         ]\r",
+							" //       }\r",
+							"  //  }\r",
+							"   // postman.setNextRequest(\"curr_byn\");\r",
+							"    //pm.sendRequest(data, function(err,response) {\r",
+							"     //   console.log(response.json());\r",
+							"\r",
+							"    //});\r",
+							"\r",
+							"//}\r",
+							"      \r",
+							"  \r",
+							"    \r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						},
+						{
+							"key": "curr_code",
+							"value": "{{curr}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{schema}}{{host}}:{{port}}/curr_byn",
+					"host": [
+						"{{schema}}{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"curr_byn"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "162.55.220.72"
+		},
+		{
+			"key": "port",
+			"value": "5005"
+		},
+		{
+			"key": "schema",
+			"value": "http://"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "age",
+			"value": ""
+		},
+		{
+			"key": "salary",
+			"value": ""
+		},
+		{
+			"key": "u_salary_1.5_year",
+			"value": ""
+		},
+		{
+			"key": "weight",
+			"value": ""
+		},
+		{
+			"key": "data",
+			"value": ""
+		},
+		{
+			"key": "curr",
+			"value": ""
+		}
+	]
+}
