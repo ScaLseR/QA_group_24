@@ -5,7 +5,7 @@ import random
 con = psycopg2.connect(
     database = "qa_ddl_24_111",
     user = "user_24_111",
-    password = "hoAEQ0",
+    password = "******",
     host = "159.69.151.133",
     port = "5056"
     )
