@@ -28,29 +28,26 @@ Success
 c:\platform-tools>adb shell screencap -p /sdcard/DCIM/todo.png | adb pull /sdcard/DCIM/todo.png
 /sdcard/DCIM/todo.png: 1 file pulled, 0 skipped. 25.4 MB/s (123420 bytes in 0.005s)
 
-5. adb logcat com.android.todolist
-12-27 09:20:32.577  1933  2160 I chatty  : uid=1000(system) ConnectivitySer expire 111 lines
-12-27 09:20:32.578  1933  1971 I chatty  : uid=1000(system) ActivityManager expire 11 lines
-12-27 09:20:32.579  1933  2670 I chatty  : uid=1000(system) MultiTaskManage expire 11 lines
-12-27 09:20:32.663  1933  1953 I chatty  : uid=1000(system) android.fg expire 2 lines
-12-27 09:20:32.684 11129 11129 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1698 android.content.ContextWrapper.startService:669 android.content.ContextWrapper.startService:669 com.android.settings.deviceinfo.UsbReceiver.startUsbService:344 com.android.settings.deviceinfo.UsbReceiver.onUsbStateReceive:188
-12-27 09:20:32.702 11129 11129 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1698 android.content.ContextWrapper.startService:669 android.content.ContextWrapper.startService:669 com.android.settings.deviceinfo.UsbReceiver.startUsbService:344 com.android.settings.deviceinfo.UsbReceiver.onUsbStateReceive:240
-12-27 09:20:32.704  1933  9111 I chatty  : uid=1000(system) Binder:1933_1A expire 14 lines
-12-27 09:20:32.738 27560 27578 I ActivityThread: Init compatible state: true
-12-27 09:20:32.794  1933  2065 I chatty  : uid=1000(system) UEventObserver expire 4 lines
-12-27 09:20:32.810 27408 27408 I ActivityThread: finishPreloaded preloadStatus 0
-12-27 09:20:32.813  1933  2087 I chatty  : uid=1000(system) Binder:1933_3 expire 5 lines
-12-27 09:20:32.821 27451 27482 W DE J ImageProcessorAlgoImpl: [effect] initAlgoXmlPath() error! can't find xml
-12-27 09:20:32.830 27518 27538 I ActivityThread: Init compatible state: false
-12-27 09:20:32.837 27518 27518 I ActivityThread: finishPreloaded preloadStatus 0
-12-27 09:20:32.864  1933  4329 I chatty  : uid=1000(system) Binder:1933_14 expire 9 lines
-12-27 09:20:32.872  1933  1933 I chatty  : uid=1000 system_server expire 33 lines
-12-27 09:20:32.914  1933  2292 I chatty  : uid=1000(system) SyncManager expire 6 lines
-12-27 09:20:33.040 27635 27676 I ActivityThread: Init compatible state: false
-12-27 09:20:33.114 27560 27560 I ActivityThread: finishPreloaded preloadStatus 0
-12-27 09:20:33.144 11129 11129 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1698 android.content.ContextWrapper.startService:669 android.content.ContextWrapper.startService:669 com.android.settings.deviceinfo.UsbReceiver.startUsbService:344 com.android.settings.deviceinfo.UsbReceiver.onUsbStateReceive:188
+5. adb logcat | findstr com.android.todolist
+12-27 12:49:46.330  2839  2839 I HwKeystoreServiceImpl: package removed for update, packageName:com.android.todolist appId:10322
+12-27 12:49:46.331  2839  2839 D DEF_PackageChangedBroadcastReceiver: onReceive com.android.todolist android.intent.action.PACKAGE_REMOVED replacing: true
+12-27 12:49:46.418  2839  2839 D DEF_PackageChangedBroadcastReceiver: onReceive com.android.todolist android.intent.action.PACKAGE_ADDED replacing: true
+12-27 12:49:46.419  2839  3128 I SmartDualCardConfig: onPackageInstallStateUpdate uid=10322,appName=com.android.todolist,packageAddFlag=1
+12-27 12:49:46.495  2839  2839 D DEF_PackageChangedBroadcastReceiver: onReceive com.android.todolist android.intent.action.PACKAGE_REPLACED replacing: true
+12-27 12:49:46.875  2839  3128 I SmartDualCardConfig: onPackageInstallStateUpdate uid=10322,appName=com.android.todolist,packageAddFlag=1
+12-27 13:14:42.520  2696  2696 I RMS.HwSysResManager: preloadAppForLauncher packageName com.android.todolist preloadType 101
+12-27 13:14:42.564  1933  2633 I HwWindowManagerServiceEx: set launch origin and target for: com.android.todolist with delay 3000
+12-27 13:14:42.565  2696  2981 E HwLauncher: ModelWriter  updateItemInDatabaseHelper error message :item: {ShortcutInfo: title: To Do List, component: ComponentInfo{com.android.todolist/com.android.todolist.MainActivity}}modelItem: nullError: ItemInfo passed to updateIsNewInstalled doesn't match original
+12-27 13:14:42.569  1933  2633 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 hwFlg=0x10 cmp=com.android.todolist/.MainActivity bnds=[530,1206][770,1535]} from uid 10063
+12-27 13:14:42.571  1006  1023 D AwareLog: iawared: WorkingsetProcessCommand subCmd = 354, userId=10322, pid=0, com.android.todolist
+12-27 13:14:42.573  1933  2633 I ActivityTaskManager: ActivityRecord info: ActivityInfo{547058f com.android.todolist.MainActivity}
+12-27 13:14:42.574  1006  1023 D AwareLog: iawared: WorkingsetSendPrereadMsg com.android.todolist
+12-27 13:14:42.574  1006  1023 D AwareLog: iawared: WorkingsetStart com.android.todolist in monitor0
+12-27 13:14:42.576  1933  2633 D ActivityTaskManager: TaskLaunchParamsModifier:task=null activity=ActivityRecord{e89201c u0 com.android.todolist/.MainActivity t-1} display-from-source=0 display-id=0 display-windowing-mode=1
+12-27 13:14:42.577  1933  2633 D ActivityTaskManager: TaskLaunchParamsModifier:task=null activity=ActivityRecord{e89201c u0 com.android.todolist/.MainActivity t-1} display-from-source=0 display-id=0 display-windowing-mode=1 activity-options-fullscreen=Rect(0, 0 - 0, 0) non-freeform-display maximized-bounds
+12-27 13:14:42.579  1933  2633 D ActivityTaskManager: TaskLaunchParamsModifier:task=TaskRecord{9d36425 #4601 A=10322:com.android.todolist U=0 StackId=1011 sz=0} activity=ActivityRecord{e89201c u0 com.android.todolist/.MainActivity t-1} display-from-task=0 display-id=0 display-windowing-mode=1 activity-options-fullscreen=Rect(0, 0 - 0, 0) non-freeform-display maximized-bounds
 
-6. adb logcat com.android.todolist >log.txt
+6. adb logcat | findstr com.android.todolist > log.txt
 
 7. adb uninstall com.android.todolist
 c:\platform-tools>adb uninstall com.android.todolist
