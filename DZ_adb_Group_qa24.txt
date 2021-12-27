@@ -1,0 +1,57 @@
+Сценарий напишите в .txt файл.
+.txt сценарий и .log файл прииложения todolist выгружайте на GitHub.
+Ссылкку на гитхаб присылайте в лс.
+
+ 1. Отобразить подключённый девайс в консоли.
+ 2. Вывести адрес приложения todolist в системе Android
+ 3. Установить .apk файл приложениия todolist на телефон с компьютера через  ADB
+ 4. Сделать скриншот запущенного приложения todolist и сразу скопировать на компьютер в одной команде.
+ 5. Вывести в консоль логи приложения todolist
+ 6. Скопировать логи приложения todolist на компьютер.
+ 7. Удалить приложение todolist с телефона через ADB
+ 
+ 1. adb devices
+c:\platform-tools>adb devices
+List of devices attached
+BQL0220214001565        device
+
+2. adb shell pm list packages todolist
+c:\platform-tools>adb shell pm list packages todolist
+package:com.android.todolist
+
+3. adb install ./todolist.apk
+c:\platform-tools>adb install ./todolist.apk
+Performing Streamed Install
+Success
+
+4. adb shell screencap -p /sdcard/DCIM/todo.png | adb pull /sdcard/DCIM/todo.png
+c:\platform-tools>adb shell screencap -p /sdcard/DCIM/todo.png | adb pull /sdcard/DCIM/todo.png
+/sdcard/DCIM/todo.png: 1 file pulled, 0 skipped. 25.4 MB/s (123420 bytes in 0.005s)
+
+5. adb logcat com.android.todolist
+12-27 09:20:32.577  1933  2160 I chatty  : uid=1000(system) ConnectivitySer expire 111 lines
+12-27 09:20:32.578  1933  1971 I chatty  : uid=1000(system) ActivityManager expire 11 lines
+12-27 09:20:32.579  1933  2670 I chatty  : uid=1000(system) MultiTaskManage expire 11 lines
+12-27 09:20:32.663  1933  1953 I chatty  : uid=1000(system) android.fg expire 2 lines
+12-27 09:20:32.684 11129 11129 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1698 android.content.ContextWrapper.startService:669 android.content.ContextWrapper.startService:669 com.android.settings.deviceinfo.UsbReceiver.startUsbService:344 com.android.settings.deviceinfo.UsbReceiver.onUsbStateReceive:188
+12-27 09:20:32.702 11129 11129 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1698 android.content.ContextWrapper.startService:669 android.content.ContextWrapper.startService:669 com.android.settings.deviceinfo.UsbReceiver.startUsbService:344 com.android.settings.deviceinfo.UsbReceiver.onUsbStateReceive:240
+12-27 09:20:32.704  1933  9111 I chatty  : uid=1000(system) Binder:1933_1A expire 14 lines
+12-27 09:20:32.738 27560 27578 I ActivityThread: Init compatible state: true
+12-27 09:20:32.794  1933  2065 I chatty  : uid=1000(system) UEventObserver expire 4 lines
+12-27 09:20:32.810 27408 27408 I ActivityThread: finishPreloaded preloadStatus 0
+12-27 09:20:32.813  1933  2087 I chatty  : uid=1000(system) Binder:1933_3 expire 5 lines
+12-27 09:20:32.821 27451 27482 W DE J ImageProcessorAlgoImpl: [effect] initAlgoXmlPath() error! can't find xml
+12-27 09:20:32.830 27518 27538 I ActivityThread: Init compatible state: false
+12-27 09:20:32.837 27518 27518 I ActivityThread: finishPreloaded preloadStatus 0
+12-27 09:20:32.864  1933  4329 I chatty  : uid=1000(system) Binder:1933_14 expire 9 lines
+12-27 09:20:32.872  1933  1933 I chatty  : uid=1000 system_server expire 33 lines
+12-27 09:20:32.914  1933  2292 I chatty  : uid=1000(system) SyncManager expire 6 lines
+12-27 09:20:33.040 27635 27676 I ActivityThread: Init compatible state: false
+12-27 09:20:33.114 27560 27560 I ActivityThread: finishPreloaded preloadStatus 0
+12-27 09:20:33.144 11129 11129 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1698 android.content.ContextWrapper.startService:669 android.content.ContextWrapper.startService:669 com.android.settings.deviceinfo.UsbReceiver.startUsbService:344 com.android.settings.deviceinfo.UsbReceiver.onUsbStateReceive:188
+
+6. adb logcat com.android.todolist >log.txt
+
+7. adb uninstall com.android.todolist
+c:\platform-tools>adb uninstall com.android.todolist
+Success
